@@ -88,8 +88,8 @@ pairwise.t.test(cdc.con1$Number.of.COVID.19.Deaths, cdc.con1$State, p.adjust="bo
 ## CA, FL, and some of IL seem to be significant compared to the other states
 # Let's see if there are more states
 
-cdc.con.means <- cdc.con1 %>% group_by(State) %>% summarize(Mean = mean(Number.of.COVID.19.Deaths))
-cdc.con.means
+cdc.statedeath.means <- cdc.con1 %>% group_by(State) %>% summarize(Mean = mean(Number.of.COVID.19.Deaths))
+View(cdc.statedeath.means)
 
 ## Looking at the means you can see that CA, TX, FL, NJ, and NY are the top 5 states with significantly higher COVID fatalities.
 
@@ -98,12 +98,25 @@ cdc.con.means
 
 
 
+####################################################################################
+###########  Let's look at the ratios of Conditions each of these top 5 states has
+target.states <- c('CA', 'TX', 'FL', 'NJ', 'NY')
 
+cdcbystate <- cdcConditions %>% filter((cdcConditions$Age.Group == 'All Ages') & 
+                                         (State %in% target.states) &
+                                         (cdcConditions$Condition != 'Intentional and unintentional injury, poisoning, and other adverse events') &
+                                         (cdcConditions$Condition != 'All other conditions and causes (residual)') &
+                                         (cdcConditions$Condition != 'COVID-19'))
 
+cdc.state.IV.DV <- cdcbystate[, c("State", "Condition","Number.of.COVID.19.Deaths")] 
 
+cdc.state.IV.DV.expanded <- cdc.state.IV.DV[rep(row.names(cdc.state.IV.DV), cdc.state.IV.DV$Number.of.COVID.19.Deaths), 1:2]
+View(cdc.state.IV.DV.expanded)
 
-
-
+CrossTable(cdc.state.IV.DV.expanded$State, cdc.state.IV.DV.expanded$Condition, fisher = TRUE, 
+           chisq = TRUE, expected = TRUE, sresid = TRUE, format = "SPSS")
+#####  data is too big hahahaha
+#########################################################################################################
 
 
 
