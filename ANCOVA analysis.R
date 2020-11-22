@@ -100,6 +100,7 @@ View(cdc.statedeath.means)
 
 ####################################################################################
 ###########  Let's look at the ratios of Conditions each of these top 5 states has
+library("gmodels")
 target.states <- c('CA', 'TX', 'FL', 'NJ', 'NY')
 
 cdcbystate <- cdcConditions %>% filter((cdcConditions$Age.Group == 'All Ages') & 
@@ -113,9 +114,11 @@ cdc.state.IV.DV <- cdcbystate[, c("State", "Condition","Number.of.COVID.19.Death
 cdc.state.IV.DV.expanded <- cdc.state.IV.DV[rep(row.names(cdc.state.IV.DV), cdc.state.IV.DV$Number.of.COVID.19.Deaths), 1:2]
 View(cdc.state.IV.DV.expanded)
 
-CrossTable(cdc.state.IV.DV.expanded$State, cdc.state.IV.DV.expanded$Condition, fisher = TRUE, 
+CrossTable(cdc.state.IV.DV.expanded$Condition, cdc.state.IV.DV.expanded$State, fisher = TRUE, 
            chisq = TRUE, expected = TRUE, sresid = TRUE, format = "SPSS")
-#####  data is too big hahahaha
+
+## look at Column Percent to find anything of significance.
+#####  
 #########################################################################################################
 
 
